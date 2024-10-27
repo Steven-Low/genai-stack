@@ -1,0 +1,11 @@
+# BUG
+1) Fix the pull-model.Docker file with "HOME" (System/getProperty "user.home") 
+   - Then, docker compose down => docker compose up -d --build
+
+2) Fix the requirements.txt by setting huggingface-hub==0.11.0
+   - Then, docker compose down => docker compose up -d --build 
+    (modify requirements.txt will take 10 mins to rebuild all the images)
+
+
+# Exporting tunnel
+3) Change the localhost:8505 to 172.20.121.5:8505 => ip addr in wsl -d Ubuntu

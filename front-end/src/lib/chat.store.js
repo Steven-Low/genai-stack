@@ -1,6 +1,7 @@
 import { writable } from "svelte/store";
 
 const API_ENDPOINT = "http://localhost:8504/query-stream";
+ 
 
 export const chatStates = {
     IDLE: "idle",
@@ -65,7 +66,7 @@ function createChatStore() {
                 update((state) => ({ ...state, state: chatStates.IDLE }));
             };
         } catch (e) {
-            updateMessage(messageId, "Error: " + e.message);
+            updateMessage(messageId, "Error Bomb: " + e.message);
             update((state) => ({ ...state, state: chatStates.IDLE }));
         }
     }

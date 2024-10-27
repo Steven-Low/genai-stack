@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 
-const API_ENDPOINT = "http://localhost:8504/generate-ticket";
-
+ const API_ENDPOINT = "http://localhost:8504/generate-ticket";
+ 
 export const generationStates = {
     IDLE: "idle",
     SUCCESS: "success",

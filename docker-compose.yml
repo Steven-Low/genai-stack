@@ -17,6 +17,16 @@ services:
               count: all
               capabilities: [gpu]
 
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN} 
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    restart: unless-stopped
+    attach: false
+    networks:
+      - net
+
   pull-model:
     image: genai-stack/pull-model:latest
     build:
@@ -24,7 +34,7 @@ services:
       dockerfile: pull_model.Dockerfile
     environment:
       - OLLAMA_BASE_URL=${OLLAMA_BASE_URL-http://host.docker.internal:11434}
-      - LLM=${LLM-llama2}
+      - LLM=${LLM-llama3}
     networks:
       - net
     tty: true
@@ -196,6 +206,7 @@ services:
       - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
     networks:
       - net
+ 
     depends_on:
       database:
         condition: service_healthy
@@ -218,26 +229,30 @@ services:
       timeout: 3s
       retries: 5
 
-  front-end:
-    build:
-      context: .
-      dockerfile: front-end.Dockerfile
-    x-develop:
-      watch:
-        - action: sync
-          path: ./front-end
-          target: /app
-          ignore:
-            - ./front-end/node_modules/
-        - action: rebuild
-          path: ./front-end/package.json
-    depends_on:
-      api:
-        condition: service_healthy
-    networks:
-      - net
-    ports:
-      - 8505:8505
+  # front-end:
+  #   build:
+  #     context: .
+  #     dockerfile: front-end.Dockerfile
+  #   x-develop:
+  #     watch:
+  #       - action: sync
+  #         path: ./front-end
+  #         target: /app
+  #         ignore:
+  #           - ./front-end/node_modules/
+  #       - action:ip  rebuild
+  #         path: ./front-end/package.json
+  #   depends_on:
+  #     api:
+  #       condition: service_healthy
+  #   networks:
+  #     - net
+  #   ports:
+  #     - 8505:8505
+
+
 
 networks:
-  net:
+  net: 
+    driver: bridge
+ 
